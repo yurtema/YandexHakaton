@@ -1,6 +1,10 @@
 from PIL import Image
 
 
+def make_desired(template, color):
+    return None
+
+
 def change_color(photo, requested_color):
     image_color = photo.convert('RGBA')
     image_grey = photo.convert('LA')
