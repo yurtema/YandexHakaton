@@ -1,7 +1,21 @@
 import requests
 
 
-def send_text(event, text, state):
+def end_session(event, text):
+    return {
+        'version': event['version'],
+        'session': event['session'],
+        'response': {
+
+            'text': text,
+
+            'end_session': 'true'
+
+        }
+    }
+
+
+def send_text(event, text, state, ids):
     return {
         'version': event['version'],
         'session': event['session'],
@@ -13,12 +27,13 @@ def send_text(event, text, state):
 
         },
         "session_state": {
-            "value": state
+            'state': state,
+            'image_ids': ids
         }
     }
 
 
-def send_image(event, text, images: list, state):
+def send_image(event, text, images: list, state, ids):
     session = requests.Session()
     session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
     image_ids = []
@@ -47,7 +62,8 @@ def send_image(event, text, images: list, state):
 
             },
             "session_state": {
-                "value": state
+                'state': state,
+                'image_ids': ids
             }
         }
 
@@ -72,7 +88,8 @@ def send_image(event, text, images: list, state):
 
             },
             "session_state": {
-                "value": state
+                'state': state,
+                'image_ids': ids
             }
         }
 
