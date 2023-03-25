@@ -1,5 +1,6 @@
-from src import yandex, phrases
-from random import choice
+from src import yandex, phrases, image
+from random import choice, randint
+import os
 
 
 def handler(event, context):
@@ -11,7 +12,7 @@ def handler(event, context):
     # Начинать или нет? да/нет
     if event['state']['session']['state'] == 'начнем?':
         if event['request']['original_utterance'].lower() in phrases.yes:
-            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'слуйчаный?'})
+            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?'})
         elif event['request']['original_utterance'].lower() in phrases.no:
             return yandex.end_session(event, choice(phrases.end_session))
 
@@ -28,5 +29,13 @@ def handler(event, context):
 
     # Прислать случайный дизайн
     if event['state']['session']['state'] == 'случайный':
-        pass
+        rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
+        rgb_dec = (randint(0, 255), randint(0, 255), randint(0, 255))
 
+        dirs = os.listdir('media')
+        dirs.remove('temp')
+        dirs.remove('misc')
+        direct = choice(dirs)
+        sample = f'{direct}/{str(randint(1, len(os.listdir(f"media/{direct}")) // 3))}'
+
+        return yandex.send_image(event, choice, [image.recolor_hand(sample, rgb_base, rgb_dec)])
