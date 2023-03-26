@@ -5,7 +5,7 @@ import os
 
 def handler(event):
 
-    return type(event) + str(event)
+    return str(type(event)) + str(event)
 
     # Начало
     if event['state']['session'] == {}:
