@@ -24,7 +24,7 @@ def handler(event):
             thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
             thread.start()
 
-            filename = f'media/temp/{sample[-1]}_{rgb_base}_{rgb_dec}.png'
+            filename = f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
 
             return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': filename})
 
