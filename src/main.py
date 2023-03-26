@@ -4,77 +4,90 @@ import os
 import threading
 
 
+def start_generating_random():
+    rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
+    rgb_dec = (randint(0, 255), randint(0, 255), randint(0, 255))
+
+    dirs = os.listdir('media')
+    dirs.remove('temp')
+    dirs.remove('misc')
+    direct = choice(dirs)
+    sample = f'{direct}/{str(randint(1, len(os.listdir(f"media/{direct}")) // 3))}'
+
+    thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
+    thread.start()
+
+    return f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
+
+
+def overlaps(user, target):
+    return [1 for i in user.lower().replace(',', ' ').replace('.', ' ').split() if
+            i in target] is not {}
+
+
 def handler(event):
     # Начало
     if event['state']['session'] == {}:
         return yandex.send_text(event, choice(phrases.greeting), {'state': 'начнем?'})
 
-    # Начинать или нет? да/нет
-    if event['state']['session']['state'] == 'начнем?':
-        if [1 for i in event['request']['original_utterance'].lower().replace(',', ' ').replace('.', ' ').split() if i in phrases.yes]:
-            rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
-            rgb_dec = (randint(0, 255), randint(0, 255), randint(0, 255))
+    user_text = event['request']['original_utterance']
+    state = event['state']['session']['state']
 
-            dirs = os.listdir('media')
-            dirs.remove('temp')
-            dirs.remove('misc')
-            direct = choice(dirs)
-            sample = f'{direct}/{str(randint(1, len(os.listdir(f"media/{direct}")) // 3))}'
+    # Начинать или нет?
+    # да - запустить генерацию изображения со случайными параметрами
+    # нет - закончить навык
+    if state == 'начнем?':
+        if overlaps(user_text, phrases.yes):
+            return yandex.send_text(event, choice(phrases.start_skill),
+                                    {'state': 'случайный?', 'hand': start_generating_random()})
 
-            thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
-            thread.start()
-
-            filename = f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
-
-            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'hand': filename})
-
-        elif [1 for i in event['request']['original_utterance'].lower().replace(',', ' ').replace('.', ' ').split() if i in phrases.no]:
+        elif overlaps(user_text, phrases.no):
             return yandex.end_session(event, choice(phrases.end_session))
 
         return yandex.send_text(event, choice(phrases.what))
 
-    # Случайный или нет? да/нет
-    if event['state']['session']['state'] == 'случайный?':
-        if [1 for i in event['request']['original_utterance'].lower().replace(',', ' ').replace('.', ' ').split() if i in phrases.yes]:
+    # Случайный или нет?
+    # рандом - прислать сгенерированное изображение если уже есть такое, если нет - вернуть с кодом ожидания
+    # конкретный - спросить про цвет
+    if state == 'случайный?':
+        if overlaps(user_text, phrases.user_random):
+            # извлечь из запроса название файла с рукой
             hand = event['state']['session']['hand']
+            # если оно еще не было сгенерировано, вернуть код ожидания
             if hand not in os.listdir('media/temp'):
                 return yandex.send_text(event, choice(phrases.wait),
                                         {'state': 'ждите генерации случайного изображения'})
-            return yandex.send_image(event, choice(phrases.random), [hand, ],
-                                     {'state': 'еще случайный?'})
+            # если было, отправить его
+            return yandex.send_image(event, choice(phrases.random), [hand, ])
 
-        elif [1 for i in event['request']['original_utterance'].lower().replace(',', ' ').replace('.', ' ').split() if i in phrases.no]:
+        if overlaps(user_text, phrases.specific_choise):
             return yandex.send_text(event, choice(phrases.random), {'state': 'цвет?'})
 
         return yandex.send_text(event, choice(phrases.what))
 
-    if event['state']['session']['state'] == 'ждите генерации случайного изображения':
+    # подождать пока пользователь отправит чето, как отправит - чекнуть, сгенерировалось оно или еще нет.
+    # если сгенерировалось - отправить, если нет - вернуть сюда
+    if state == 'ждите генерации случайного изображения':
+        # извлечь из запроса название файла с рукой
         hand = event['state']['session']['hand']
+        # если оно еще не было сгенерировано, вернуть код ожидания
         if hand not in os.listdir('media/temp'):
             return yandex.send_text(event, choice(phrases.wait),
                                     {'state': 'ждите генерации случайного изображения'})
+        # если было, отправить его
         return yandex.send_image(event, choice(phrases.random), [hand, ],
-                                 {'state': 'еще случайный?'})
+                                 {'state': 'еще случайный?', 'hand': start_generating_random()})
 
-    if event['state']['session']['state'] == 'еще случайный?':
-        if [1 for i in event['request']['original_utterance'].lower().replace(',', ' ').replace('.', ' ').split() if i in phrases.yes] is not {}:
-            rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
-            rgb_dec = (randint(0, 255), randint(0, 255), randint(0, 255))
+    # спросить, отправлять ли еще одно случайное изображение
+    # да - начать генерировать и вернуть код ожидания
+    # нет - закончить навык
+    if state == 'еще случайный?':
+        if overlaps(user_text, phrases.yes):
+            return yandex.send_text(event, choice(phrases.start_skill),
+                                    {'state': 'ждите генерации случайного изображения',
+                                     'hand': start_generating_random()})
 
-            dirs = os.listdir('media')
-            dirs.remove('temp')
-            dirs.remove('misc')
-            direct = choice(dirs)
-            sample = f'{direct}/{str(randint(1, len(os.listdir(f"media/{direct}")) // 3))}'
-
-            thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
-            thread.start()
-
-            filename = f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
-
-            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'hand': filename})
-
-        elif [1 for i in event['request']['original_utterance'].lower().replace(',', ' ').replace('.', ' ').split() if i in phrases.no]:
+        elif overlaps(user_text, phrases.no):
             return yandex.end_session(event, choice(phrases.end_session))
 
         return yandex.send_text(event, choice(phrases.what))
