@@ -5,6 +5,6 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['POST'])
-def handler():
+def entrypoint():
     event = request.args.get('event')
     return handler(event)

@@ -34,4 +34,3 @@ def change_color(photo: Image, requested_color: tuple):
     return Image.alpha_composite(image_color, image_grey.convert('RGBA'))
 
 
-recolor_hand('geometry/1', (255, 0, 0), (0, 255, 0))
