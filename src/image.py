@@ -11,7 +11,7 @@ def recolor_hand(photo: str, rgb_base: tuple, rgb_dec: tuple):
 
     hand.paste(base, (0, 0), base)
     hand.paste(dec, (0, 0), dec)
-    hand.save(f'media/temp/{photo[-1]}_{rgb_base}_{rgb_dec}.png')
+    hand.save(f'media/{photo[-1]}_{rgb_base}_{rgb_dec}.png')
 
     return f'media/temp/{photo[-1]}_{rgb_base}_{rgb_dec}.png'
 
