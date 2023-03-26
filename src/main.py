@@ -36,8 +36,11 @@ def handler(event):
     # Случайный или нет? да/нет
     if event['state']['session']['state'] == 'случайный?':
         if event['request']['original_utterance'].lower() in phrases.yes:
-            return yandex.send_image(event, choice(phrases.random), [event['state']['session']['random_hand'], ],
-                                     {'state': 'еще раз?'})
+            hand = event['state']['session']['random_hand']
+            if hand not in os.listdir('media/temp'):
+                return yandex.send_text(event, 'Ожидайте епта')
+            return yandex.send_image(event, choice(phrases.random), [hand, ],
+                                     {'state': 'еще случайный?'})
 
         elif event['request']['original_utterance'].lower() in phrases.no:
             return yandex.send_text(event, choice(phrases.random), {'state': 'цвет?'})
