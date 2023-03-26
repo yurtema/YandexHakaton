@@ -8,6 +8,6 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def entrypoint():
 
-    event = request.data.decode('utf8')
+    event = json.loads(request.data.decode('utf8'))
 
     return handler(event)
