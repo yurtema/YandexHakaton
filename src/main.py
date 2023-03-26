@@ -1,6 +1,6 @@
 from src import yandex, phrases, image
 from random import choice, randint
-from os import listdir
+from os import listdir, remove
 import threading
 
 
@@ -16,6 +16,10 @@ def start_generating_random():
 
     thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
     thread.start()
+
+    if len(listdir('media/temp')) >= 10:
+        for i in range(7):
+            remove(choice(listdir('media/temp')))
 
     return f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
 
@@ -65,7 +69,7 @@ def handler(event):
     # нет - закончить навык
     if state == 'еще случайный?':
         if overlaps(user_text, phrases.random):
-            return yandex.send_image(event, choice(phrases.start_skill), [choice(listdir('media/temp'))],
+            return yandex.send_image(event, choice(phrases.random), [choice(listdir('media/temp'))],
                                      {'state': 'еще случайный?'})
 
         elif overlaps(user_text, phrases.no):
