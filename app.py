@@ -4,5 +4,5 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def hello_world():
+def handler():
     return 'Hello, yeah, Docker!'
