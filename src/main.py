@@ -5,8 +5,6 @@ import os
 
 def handler(event):
 
-    return str(type(5)) + str(type(event)) + str(event)
-
     # Начало
     if event['state']['session'] == {}:
         return yandex.send_text(event, choice(phrases.greeting), {'state': 'начнем?'})
