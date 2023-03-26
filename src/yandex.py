@@ -40,7 +40,7 @@ def send_text(event, text, state_change: dict = ()):
     }
 
 
-def send_image(event, text, images: list):
+def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
 
     # Подсоедениться к сессии http запроса и отправить все нужные изображения в хранилище Яндекса
@@ -59,6 +59,9 @@ def send_image(event, text, images: list):
     # Запросить id изображений уже хранящийхся в переменной и добавить к полученному новые id
     # Если такой строчки еще нет, создать
     state['image_ids'] = state.get(['image_ids'], []) + image_ids
+    # Заменить нужные
+    for i in state_change:
+        state[i] = state_change[i]
 
     if len(images) == 1:
 
