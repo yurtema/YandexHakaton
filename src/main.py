@@ -1,6 +1,7 @@
 from src import yandex, phrases, image
 from random import choice, randint
 import os
+import threading
 
 
 def handler(event):
@@ -20,8 +21,12 @@ def handler(event):
             direct = choice(dirs)
             sample = f'{direct}/{str(randint(1, len(os.listdir(f"media/{direct}")) // 3))}'
 
-            hand = image.recolor_hand(sample, rgb_base, rgb_dec)
-            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': hand})
+            thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
+
+            thread.start()
+
+            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': 'жесть'})
+
         elif event['request']['original_utterance'].lower() in phrases.no:
             return yandex.end_session(event, choice(phrases.end_session))
 
@@ -37,7 +42,6 @@ def handler(event):
             return yandex.send_text(event, choice(phrases.random), {'state': 'цвет?'})
 
         return yandex.send_text(event, choice(phrases.what))
-
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
