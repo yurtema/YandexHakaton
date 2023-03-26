@@ -26,7 +26,7 @@ def handler(event):
 
             filename = f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
 
-            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': filename})
+            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'hand': filename})
 
         elif event['request']['original_utterance'].lower() in phrases.no:
             return yandex.end_session(event, choice(phrases.end_session))
@@ -36,9 +36,10 @@ def handler(event):
     # Случайный или нет? да/нет
     if event['state']['session']['state'] == 'случайный?':
         if event['request']['original_utterance'].lower() in phrases.yes:
-            hand = event['state']['session']['random_hand']
+            hand = event['state']['session']['hand']
             if hand not in os.listdir('media/temp'):
-                return yandex.send_text(event, 'Ожидайте епта')
+                return yandex.send_text(event, choice(phrases.wait),
+                                        {'state': 'ждите генерации случайного изображения'})
             return yandex.send_image(event, choice(phrases.random), [hand, ],
                                      {'state': 'еще случайный?'})
 
@@ -46,6 +47,14 @@ def handler(event):
             return yandex.send_text(event, choice(phrases.random), {'state': 'цвет?'})
 
         return yandex.send_text(event, choice(phrases.what))
+
+    if event['state']['session']['state'] == 'ждите генерации случайного изображения':
+        hand = event['state']['session']['hand']
+        if hand not in os.listdir('media/temp'):
+            return yandex.send_text(event, choice(phrases.wait),
+                                    {'state': 'ждите генерации изображения'})
+        return yandex.send_image(event, choice(phrases.random), [hand, ],
+                                 {'state': 'еще случайный?'})
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
