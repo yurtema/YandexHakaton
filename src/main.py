@@ -19,7 +19,7 @@ def start_generating_random():
 
     if len(listdir('media/temp')) >= 10:
         for i in range(7):
-            remove(choice(listdir('media/temp')))
+            remove('media/temp/' + choice(listdir('media/temp')))
 
     return f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
 
