@@ -52,7 +52,7 @@ def handler(event):
         hand = event['state']['session']['hand']
         if hand not in os.listdir('media/temp'):
             return yandex.send_text(event, choice(phrases.wait),
-                                    {'state': 'ждите генерации изображения'})
+                                    {'state': 'ждите генерации случайного изображения'})
         return yandex.send_image(event, choice(phrases.random), [hand, ],
                                  {'state': 'еще случайный?'})
 
