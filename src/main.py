@@ -17,8 +17,8 @@ def start_generating_random():
     thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
     thread.start()
 
-    if len(listdir('media/temp')) >= 10:
-        for i in range(7):
+    if len(listdir('media/temp')) >= 100:
+        for i in range(70):
             remove('media/temp/' + choice(listdir('media/temp')))
 
     return f'{sample[-1]}_{rgb_base}_{rgb_dec}.png'
@@ -65,7 +65,7 @@ def handler(event):
         return yandex.send_text(event, choice(phrases.what))
 
     # Отправлять ли еще одно случайное изображение или закончить?
-    # случайное - начать генерировать и вернуть код ожидания
+    # случайное - отправить случайное изображение из папки temp и спросить снова
     # нет - закончить навык
     if state == 'еще случайный?':
         if overlaps(user_text, phrases.random):
