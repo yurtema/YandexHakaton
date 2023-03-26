@@ -6,4 +6,4 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def entrypoint():
-    return request.form, request.data, request.args, request.values
+    return [request.form, request.data, request.args, request.values]
