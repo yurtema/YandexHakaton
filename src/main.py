@@ -39,3 +39,6 @@ def handler(event):
         sample = f'{direct}/{str(randint(1, len(os.listdir(f"media/{direct}")) // 3))}'
 
         return yandex.send_image(event, choice, [image.recolor_hand(sample, rgb_base, rgb_dec)])
+
+    else:
+        return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
