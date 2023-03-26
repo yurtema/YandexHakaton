@@ -22,10 +22,11 @@ def handler(event):
             sample = f'{direct}/{str(randint(1, len(os.listdir(f"media/{direct}")) // 3))}'
 
             thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
-
             thread.start()
 
-            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': sample})
+            filename = f'media/temp/{sample[-1]}_{rgb_base}_{rgb_dec}.png'
+
+            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': filename})
 
         elif event['request']['original_utterance'].lower() in phrases.no:
             return yandex.end_session(event, choice(phrases.end_session))
