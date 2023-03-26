@@ -3,7 +3,7 @@ from random import choice, randint
 import os
 
 
-def handler(event, context):
+def handler(event):
 
     # Начало
     if event['state']['session'] == {}:

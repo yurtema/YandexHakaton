@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask, request
 from src.main import handler
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def handler(event, context):
-    return handler(event, context)
+@app.route('/', methods=['POST'])
+def handler():
+    event = request.args.get('event')
+    return handler(event)
