@@ -25,7 +25,7 @@ def handler(event):
 
             thread.start()
 
-            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': 'жесть'})
+            return yandex.send_text(event, choice(phrases.start_skill), {'state': 'случайный?', 'random_hand': sample})
 
         elif event['request']['original_utterance'].lower() in phrases.no:
             return yandex.end_session(event, choice(phrases.end_session))
