@@ -21,7 +21,7 @@ def handler(event):
     # Случайный или нет? да/нет
     if event['state']['session']['state'] == 'случайный?':
         if event['request']['original_utterance'].lower() in phrases.yes:
-            return yandex.send_text(event, choice(phrases.random), {'state': 'слуйчаный'})
+            return yandex.send_text(event, choice(phrases.random), {'state': 'случайный'})
         elif event['request']['original_utterance'].lower() in phrases.no:
             return yandex.send_text(event, choice(phrases.random), {'state': 'цвет?'})
 
