@@ -1,3 +1,4 @@
 pillow
 Flask
 requests
+json
