@@ -1,5 +1,19 @@
 from requests import Session
 from multiprocessing import Pool
+from json import load, dump
+
+session = Session()
+session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
+
+
+def send(image, files):
+    if image in files:
+        return files.get(image)
+    image_id = session.post('https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images',
+                            {'Content-Type': 'multipart/form-data'},
+                            files={'file': (image, open(f'media/{image}', 'rb'))}).json()['image']['id']
+    files[image] = image_id
+    return image_id
 
 
 def end_session(event, text):
@@ -40,25 +54,24 @@ def send_text(event, text, state_change: dict = ()):
     }
 
 
-def post_image(image):
-    session = Session()
-    session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
-    return session.post('https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images',
-                        {'Content-Type': 'multipart/form-data'},
-                        files={'file': (image, open(f'media/{image}', 'rb'))}).json()['image']['id']
-
-
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
+
+    with open('files.json', encoding='utf8', mode='r') as file:
+        uploaded_files = load(file)
 
     image_ids = []
     if len(images) == 1:
         # записывая id всех изображений в список
-        image_ids.append(post_image(images[0]))
+        image_ids.append(send(images[0], uploaded_files))
 
     else:
+        sequence = [(i, uploaded_files) for i in images]
         with Pool(len(images)) as p:
-            image_ids += p.map(post_image, images)
+            image_ids += p.starmap(send, sequence)
+
+    with open('files.json', encoding='utf8', mode='w') as file:
+        dump(uploaded_files, file)
 
     # Записать существующие переменные
     state = event['state']['session']
