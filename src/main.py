@@ -25,8 +25,7 @@ def start_generating_random():
 
 
 def overlaps(user, target):
-    answ = [1 for i in user.lower().replace(',', ' ').replace('.', ' ').split() if i in target] != []
-    return answ
+    return [1 for i in user.replace(',', ' ').replace('.', ' ').split() if i in target] != []
 
 
 def handler(event):
@@ -34,7 +33,7 @@ def handler(event):
     if event['state']['session'] == {}:
         return yandex.send_text(event, choice(phrases.greeting), {'state': 'начнем?'})
 
-    user_text = event['request']['original_utterance']
+    user_text = event['request']['original_utterance'].lower()
     state = event['state']['session']['state']
     start_generating_random()
 
@@ -60,7 +59,7 @@ def handler(event):
                                      {'state': 'еще случайный?'})
 
         if overlaps(user_text, phrases.specific_choise):
-            return yandex.send_text(event, choice(phrases.random), {'state': 'цвет?'})
+            return yandex.send_text(event, choice(phrases.what_colors), {'state': 'цвет?'})
 
         return yandex.send_text(event, choice(phrases.what))
 
@@ -68,7 +67,7 @@ def handler(event):
     # случайное - отправить случайное изображение из папки temp и спросить снова
     # нет - закончить навык
     if state == 'еще случайный?':
-        if overlaps(user_text, phrases.random):
+        if overlaps(user_text, phrases.user_random):
             return yandex.send_image(event, choice(phrases.random), [choice(listdir('media/temp'))],
                                      {'state': 'еще случайный?'})
 
@@ -76,6 +75,21 @@ def handler(event):
             return yandex.end_session(event, choice(phrases.end_session))
 
         return yandex.send_text(event, choice(phrases.what))
+
+    # Какой цвет?
+    # рандом - выбрать случайный цвет
+    # цвет - записать выбранный
+    # каталог - прислать цвета возможные
+    if state == 'цвет?':
+        if overlaps(user_text, phrases.user_random):
+            rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
+            return yandex.send_text(event, choice(phrases.what_design), {'base_color': rgb_base})
+
+        if overlaps(user_text, phrases.colors):
+            return yandex.send_text(event, choice(phrases.what_design), {'base_color': phrases.colors[user_text]})
+
+        if overlaps(user_text, phrases.available):
+            return yandex.send_text(event, ' '.join(phrases.colors.keys()))
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
