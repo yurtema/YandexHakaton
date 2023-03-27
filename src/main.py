@@ -92,12 +92,12 @@ def handler(event):
             rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
             return yandex.send_text(event,
                                     choice(phrases.what_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
-                                    {'state': 'тема дек?', 'base_color': tuple(rgb_base)})
+                                    {'state': 'тема дек?', 'base_color': rgb_base})
 
         if overlaps(user_text, phrases.colors):
             return yandex.send_text(event,
                                     choice(phrases.what_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
-                                    {'state': 'тема дек?', 'base_color': tuple(phrases.colors[user_text])})
+                                    {'state': 'тема дек?', 'base_color': phrases.colors[user_text]})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
@@ -151,8 +151,9 @@ def handler(event):
         theme = event['state']['session']['dec_theme']
         design = event['state']['session']['design']
         base_color = event['state']['session']['base_color']
+
         if overlaps(user_text, phrases.user_random):
-            rgb_dec = (randint(0, 255), randint(0, 255), randint(0, 255))
+            rgb_dec = [randint(0, 255), randint(0, 255), randint(0, 255)]
             dec_color = rgb_dec
             file = f'{theme}/{design}'
             thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
@@ -161,7 +162,7 @@ def handler(event):
                                            f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         if overlaps(user_text, phrases.colors):
-            dec_color = phrases.colors[user_text]
+            dec_color = list(phrases.colors[user_text])
             file = f'{theme}/{design}'
             thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
