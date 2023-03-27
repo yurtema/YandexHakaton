@@ -120,7 +120,8 @@ def handler(event):
     if state == 'дизайн?':
         theme = event['state']['session']['dec_theme']
         available = {i[0] for i in theme}
-        if overlaps(user_text, available)
+        if overlaps(user_text, available):
+            pass
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
