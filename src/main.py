@@ -35,7 +35,7 @@ def handler(event):
 
     user_text = event['request']['original_utterance'].lower()
     state = event['state']['session']['state']
-    start_generating_random()
+    # start_generating_random()
 
     # Начинать или нет?
     # да - запустить генерацию изображения со случайными параметрами
