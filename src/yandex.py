@@ -61,6 +61,8 @@ def send_image(event, text, images: list, state_change: dict = ()):
         pass
     with open('src/files.json', 'r', encoding='utf8') as file:
         file_ = file.read()
+        print('прочитал блять')
+        print(file_)
     with open('src/files.json', 'w', encoding='utf8') as file:
         if file_ == '':
             file.write('{}')
@@ -88,6 +90,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
             uploaded_files[images[i]] = image_ids[i]
 
     with open('src/files.json', encoding='utf8', mode='w') as file:
+        print('открыл для записи')
         print(uploaded_files)
         dump(uploaded_files, file)
 
