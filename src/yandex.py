@@ -96,7 +96,8 @@ def send_image(event, text, images: list, state_change: dict = ()):
 
                 'card': {
                     'type': 'BigImage',
-                    'title': text
+                    'title': text,
+                    'image_id': image_ids[0]
                 }
 
             },

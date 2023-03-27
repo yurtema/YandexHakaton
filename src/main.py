@@ -121,6 +121,8 @@ def handler(event):
 
         return yandex.send_text(event, choice(phrases.error_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs))
 
+    # Все ниже писалось после полуночи
+
     # Какой дизайн?
     # номер дизайна - записать дизайн
     # каталог - начать показывать возможные варианты
@@ -152,12 +154,15 @@ def handler(event):
         if overlaps(user_text, phrases.user_random):
             rgb_dec = (randint(0, 255), randint(0, 255), randint(0, 255))
             dec_color = rgb_dec
-            return yandex.send_text(event, f'зашибись: тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
-                                           f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'dec_color': rgb_dec})
+            file = f'{theme}/{design}'
+            thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
+            thread.start()
+            return yandex.send_text(event, f'зашибись\n: тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
+                                           f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'file'})
 
         if overlaps(user_text, phrases.colors):
-            dec_color = user_text
-            return yandex.send_text(event, f'зашибись: тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
+            dec_color = phrases.colors[user_text]
+            return yandex.send_text(event, f'зашибись\n: тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
                                            f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'dec_color': phrases.colors[user_text]})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
