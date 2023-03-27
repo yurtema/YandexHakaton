@@ -68,6 +68,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
     with open('src/files.json', encoding='utf8', mode='r') as file:
         uploaded_files = load(file)
 
+    print('я ничего не понимаю')
     print(uploaded_files)
 
     image_ids = []
