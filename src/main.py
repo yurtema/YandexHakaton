@@ -10,7 +10,6 @@ def start_generating_random():
 
     dirs = listdir('media')
     dirs.remove('temp')
-    dirs.remove('misc')
     direct = choice(dirs)
     sample = f'{direct}/{str(randint(1, len(listdir(f"media/{direct}")) // 3))}'
 
@@ -83,15 +82,34 @@ def handler(event):
     if state == 'цвет?':
         if overlaps(user_text, phrases.user_random):
             rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
-            return yandex.send_text(event, choice(phrases.what_design), {'base_color': rgb_base})
+            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?', 'base_color': rgb_base})
 
         if overlaps(user_text, phrases.colors):
-            return yandex.send_text(event, choice(phrases.what_design), {'base_color': phrases.colors[user_text]})
+            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?',
+                                                                         'base_color': phrases.colors[user_text]})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
-                phrases.colors.keys()))
+            phrases.colors.keys()))
 
+    # Из какой папки брать декор?
+    # рандом - выбрать случайную тему
+    # тема - записать выбранную
+    if state == 'тема дек?':
 
+        dirs = listdir('media')
+        dirs.remove('temp')
+        random_theme = choice(dirs)
+
+        if overlaps(user_text, phrases.user_random):
+            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?',
+                                                                         'dec_theme': random_theme})
+
+        if overlaps(user_text, dirs):
+            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?',
+                                                                         'dec_theme': user_text})
+
+        return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
+            phrases.colors.keys()))
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
