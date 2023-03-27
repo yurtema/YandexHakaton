@@ -55,7 +55,7 @@ def handler(event):
     # конкретный - спросить про цвет
     if state == 'случайный?':
         if overlaps(user_text, phrases.user_random):
-            return yandex.send_image(event, choice(phrases.random), [choice(listdir('media/temp')), ],
+            return yandex.send_image(event, choice(phrases.random), ['temp/'+choice(listdir('media/temp')), ],
                                      {'state': 'еще случайный?'})
 
         if overlaps(user_text, phrases.specific_choise):
@@ -69,7 +69,7 @@ def handler(event):
     # нет - закончить навык
     if state == 'еще случайный?':
         if overlaps(user_text, phrases.user_random):
-            return yandex.send_image(event, choice(phrases.random), [choice(listdir('media/temp'))],
+            return yandex.send_image(event, choice(phrases.random), ['temp/'+choice(listdir('media/temp'))],
                                      {'state': 'еще случайный?'})
 
         if overlaps(user_text, phrases.no):
@@ -85,11 +85,11 @@ def handler(event):
         dirs.remove('temp')
         if overlaps(user_text, phrases.user_random):
             rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
-            return yandex.send_text(event, choice(phrases.what_theme) + 'Варианты:\n' + 'случайный\n' + '\n'.join(dirs),
+            return yandex.send_text(event, choice(phrases.what_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
                                     {'state': 'тема дек?', 'base_color': rgb_base})
 
         if overlaps(user_text, phrases.colors):
-            return yandex.send_text(event, choice(phrases.what_theme) + 'Варианты:\n' + 'случайный\n' + '\n'.join(dirs),
+            return yandex.send_text(event, choice(phrases.what_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
                                     {'state': 'тема дек?', 'base_color': phrases.colors[user_text]})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
@@ -132,7 +132,7 @@ def handler(event):
                                     {'state': 'цвет дизайна?', 'design': choice(list(available))})
 
         if overlaps(user_text, phrases.available):
-            images = [i + '_hand' for i in available]
+            images = [f'{theme}/{i}_hand' for i in available]
             if len(images) > 10:
                 return yandex.send_image(event, 'страница 1/' + str(len(images) // 10), images, {'state': 'каталог',
                                                                                                  'page': 1})

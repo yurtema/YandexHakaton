@@ -52,7 +52,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
         image_ids.append(
             session.post('https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images',
                          {'Content-Type': 'multipart/form-data'},
-                         files={'file': (image, open(f'media/temp/{image}', 'rb'))}).json()['image']['id'])
+                         files={'file': (image, open(f'media/{image}', 'rb'))}).json()['image']['id'])
 
     # Записать существующие переменные
     state = event['state']['session']
