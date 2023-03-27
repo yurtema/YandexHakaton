@@ -67,7 +67,8 @@ def send_image(event, text, images: list, state_change: dict = ()):
 
     with open('src/files.json', encoding='utf8', mode='r') as file:
         uploaded_files = load(file)
-        print(uploaded_files)
+
+    print(uploaded_files)
 
     image_ids = []
     if len(images) == 1:
@@ -76,6 +77,8 @@ def send_image(event, text, images: list, state_change: dict = ()):
 
     else:
         sequence = [(i, uploaded_files) for i in images]
+        print(sequence)
+        print(uploaded_files)
         with Pool(len(images)) as p:
             image_ids = p.starmap(send, sequence)
 
