@@ -86,10 +86,10 @@ def handler(event):
             return yandex.send_text(event, choice(phrases.what_design), {'base_color': rgb_base})
 
         if overlaps(user_text, phrases.colors):
-            return yandex.send_text(event, choice(phrases.what_design) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
-                phrases.colors.keys()), {'base_color': phrases.colors[user_text]})
+            return yandex.send_text(event, choice(phrases.what_design), {'base_color': phrases.colors[user_text]})
 
-        return yandex.send_text(event, choice(phrases.error_color))
+        return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
+                phrases.colors.keys()))
 
 
 
