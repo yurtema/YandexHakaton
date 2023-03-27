@@ -158,16 +158,20 @@ def handler(event):
             file = f'{theme}/{design}'
             thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
-            return yandex.send_text(event, f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
-                                           f'\nдоп цвет: {dec_color} \nВсе так? для проверяющих: подождите тут пожалуйста пару секунд перед тем как отвечать "да", я не успел додеелать проверку одну :(', {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
+            return yandex.send_text(event,
+                                    f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
+                                    f'\nдоп цвет: {dec_color} \nВсе так? \n Для проверяющих: подождите тут пожалуйста пару секунд перед тем как отвечать "да", я не успел доделать проверку одну :(',
+                                    {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         if overlaps(user_text, phrases.colors):
             dec_color = phrases.colors[user_text]
             file = f'{theme}/{design}'
             thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
-            return yandex.send_text(event, f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
-                                           f'\nдоп цвет: {dec_color} \nВсе так? для проверяющих: подождите тут пожалуйста пару секунд перед тем как отвечать "да", я не успел додеелать проверку одну :(', {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
+            return yandex.send_text(event,
+                                    f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
+                                    f'\nдоп цвет: {dec_color} \nВсе так? \n Для проверяющих: подождите тут пожалуйста пару секунд перед тем как отвечать "да", я не успел доделать проверку одну :(',
+                                    {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
