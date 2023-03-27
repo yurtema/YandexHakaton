@@ -4,3 +4,4 @@ delete_images.py
 test.py
 .idea
 src/files.json
+src/__pycache__
