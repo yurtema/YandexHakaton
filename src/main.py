@@ -102,17 +102,25 @@ def handler(event):
         random_theme = choice(dirs)
 
         if overlaps(user_text, phrases.user_random):
-            return yandex.send_text(event, choice(phrases.what_theme), {'state': 'тема дек?',
-                                                                        'dec_theme': random_theme})
+            return yandex.send_text(event, choice(phrases.what_design), {'state': 'дизайн?',
+                                                                         'dec_theme': random_theme})
 
         if overlaps(user_text, dirs):
-            return yandex.send_text(event, choice(phrases.what_theme), {'state': 'тема дек?',
-                                                                        'dec_theme': user_text})
+            return yandex.send_text(event, choice(phrases.what_design), {'state': 'дизайн?',
+                                                                         'dec_theme': user_text})
 
         if overlaps(user_text, phrases.available):
             return yandex.send_text(event, 'Варианты:\n' + 'случайный\n' + '\n'.join(dirs))
 
         return yandex.send_text(event, choice(phrases.error_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs))
+
+    # Какой дизайн?
+    # номер дизайна - записать дизайн
+    # каталог - начать показывать возможные варианты
+    if state == 'дизайн?':
+        theme = event['state']['session']['dec_theme']
+        available = {i[0] for i in theme}
+        if overlaps(user_text, available)
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
