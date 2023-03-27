@@ -13,7 +13,7 @@ def send(image, files):
                             {'Content-Type': 'multipart/form-data'},
                             files={'file': (image, open(f'media/{image}', 'rb'))}).json()['image']['id']
     files[image] = image_id
-    return image_id
+    return {image: image_id}
 
 
 def end_session(event, text):
@@ -70,20 +70,16 @@ def send_image(event, text, images: list, state_change: dict = ()):
     else:
         sequence = [(i, uploaded_files) for i in images]
         with Pool(len(images)) as p:
-            image_ids += p.starmap(send, sequence)
+            image_ids = p.starmap(send, sequence)
+
+        for i in range(len(images)):
+            uploaded_files[images[i]] = image_ids[i]
 
     with open('src/files.json', encoding='utf8', mode='w') as file:
         dump(uploaded_files, file)
 
     # Записать существующие переменные
     state = event['state']['session']
-    # Запросить id изображений уже хранящийхся в переменной и добавить к полученному новые id
-    # Если такой строчки еще нет, создать
-    if 'image_ids' in state:
-        state['image_ids'] += image_ids
-    else:
-        state['image_ids'] = image_ids
-    # Заменить нужные
     for i in state_change:
         state[i] = state_change[i]
 
@@ -100,7 +96,6 @@ def send_image(event, text, images: list, state_change: dict = ()):
 
                 'card': {
                     'type': 'BigImage',
-                    'image_id': image_ids[0],
                     'title': text
                 }
 
