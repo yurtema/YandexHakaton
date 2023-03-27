@@ -175,7 +175,7 @@ def handler(event):
     if state == 'все так?':
 
         if overlaps(user_text, phrases.yes):
-            return yandex.send_image(event, 'Все готово:', [event['state']['session']['file'], ])
+            return yandex.send_image(event, 'Все готово:', ['temp/' + event['state']['session']['file'], ])
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
