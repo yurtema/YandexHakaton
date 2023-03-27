@@ -1,7 +1,7 @@
 from PIL import Image
 
 
-def recolor_hand(photo: str, rgb_base: tuple, rgb_dec: tuple):
+def recolor_hand(photo: str, rgb_base: list, rgb_dec: list):
     hand = Image.open(f'media/{photo}_hand.png').convert('RGBA')
     base = Image.open(f'media/{photo}_base.png').convert('RGBA')
     dec = Image.open(f'media/{photo}_dec.png').convert('RGBA')
@@ -17,14 +17,14 @@ def recolor_hand(photo: str, rgb_base: tuple, rgb_dec: tuple):
     return f'media/temp/{photo[-1]}_{rgb_base}_{rgb_dec}.png'
 
 
-def change_color(photo: Image, requested_color: tuple):
+def change_color(photo: Image, requested_color: list):
     image_color = photo.convert('RGBA')
     image_grey = photo.convert('LA')
 
     for x in range(image_color.width):
         for y in range(image_color.height):
             if image_color.getpixel((x, y))[-1] != 0:
-                image_color.putpixel((x, y), requested_color + (image_color.getpixel((x, y))[-1],))
+                image_color.putpixel((x, y), requested_color + [image_color.getpixel((x, y))[-1],])
 
     for x in range(image_grey.width):
         for y in range(image_grey.height):

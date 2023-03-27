@@ -162,7 +162,7 @@ def handler(event):
                                            f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         if overlaps(user_text, phrases.colors):
-            dec_color = list(phrases.colors[user_text])
+            dec_color = phrases.colors[user_text]
             file = f'{theme}/{design}'
             thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
