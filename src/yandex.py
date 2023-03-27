@@ -56,6 +56,8 @@ def send_text(event, text, state_change: dict = ()):
 
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
+    with open('src/files.json', 'w') as file:
+        test = file.write('{}')
 
     with open('files.json', encoding='utf8', mode='r') as file:
         uploaded_files = load(file)
