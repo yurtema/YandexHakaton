@@ -55,7 +55,7 @@ def send_text(event, text, state_change: dict = ()):
 
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
-    with open('src/files.json', 'x') as file:
+    with open('src/files.json', 'w') as file:
         pass
     with open('src/files.json', 'r') as file:
         file_ = file.read()
