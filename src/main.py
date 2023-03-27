@@ -85,8 +85,12 @@ def handler(event):
             return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?', 'base_color': rgb_base})
 
         if overlaps(user_text, phrases.colors):
-            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?',
-                                                                         'base_color': phrases.colors[user_text]})
+            dirs = listdir('media')
+            dirs.remove('temp')
+            random_theme = choice(dirs)
+            return yandex.send_text(event,
+                                    choice(phrases.what_design) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
+                                    {'state': 'тема дек?', 'base_color': phrases.colors[user_text]})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
@@ -108,8 +112,7 @@ def handler(event):
             return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?',
                                                                          'dec_theme': user_text})
 
-        return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
-            phrases.colors.keys()))
+        return yandex.send_text(event, choice(phrases.error_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs))
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
