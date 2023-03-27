@@ -120,8 +120,21 @@ def handler(event):
     if state == 'дизайн?':
         theme = event['state']['session']['dec_theme']
         available = {i[0] for i in theme}
-        if overlaps(user_text, available):
-            pass
 
+        if overlaps(user_text, available):
+            return yandex.send_text(event, choice(phrases.what_design_color) + '\nВарианты:\n' + 'случайный\n' +
+                                    '\n'.join(phrases.colors.keys()), {'state': 'цвет дизайна?', 'design': user_text})
+
+        if overlaps(user_text, phrases.user_random):
+            return yandex.send_text(event, choice(phrases.what_design_color) + '\nВарианты:\n' + 'случайный\n' +
+                                    '\n'.join(phrases.colors.keys()),
+                                    {'state': 'цвет дизайна?', 'design': choice(list(available))})
+
+        if overlaps(user_text, phrases.available):
+            images = [i + '_hand' for i in available]
+            if len(images) > 10:
+                return yandex.send_image(event, 'страница 1/' + str(len(images) // 10), images, {'state': 'каталог',
+                                                                                                 'page': 1})
+            return yandex.send_image(event, 'вот все доступные дизайны', images)
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
