@@ -59,7 +59,7 @@ def handler(event):
                                      {'state': 'еще случайный?'})
 
         if overlaps(user_text, phrases.specific_choise):
-            return yandex.send_text(event, choice(phrases.what_colors), {'state': 'цвет?'})
+            return yandex.send_text(event, choice(phrases.what_color), {'state': 'цвет?'})
 
         return yandex.send_text(event, choice(phrases.what))
 
