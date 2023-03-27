@@ -59,7 +59,8 @@ def handler(event):
                                      {'state': 'еще случайный?'})
 
         if overlaps(user_text, phrases.specific_choise):
-            return yandex.send_text(event, choice(phrases.what_color), {'state': 'цвет?'})
+            return yandex.send_text(event, choice(phrases.what_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
+                phrases.colors.keys()), {'state': 'цвет?'})
 
         return yandex.send_text(event, choice(phrases.what))
 
@@ -79,7 +80,6 @@ def handler(event):
     # Какой цвет?
     # рандом - выбрать случайный цвет
     # цвет - записать выбранный
-    # каталог - прислать цвета возможные
     if state == 'цвет?':
         if overlaps(user_text, phrases.user_random):
             rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
@@ -88,8 +88,7 @@ def handler(event):
         if overlaps(user_text, phrases.colors):
             return yandex.send_text(event, choice(phrases.what_design), {'base_color': phrases.colors[user_text]})
 
-        if overlaps(user_text, phrases.available):
-            return yandex.send_text(event, ' '.join(phrases.colors.keys()))
+
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
