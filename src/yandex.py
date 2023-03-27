@@ -113,7 +113,4 @@ def send_image(event, text, images: list, state_change: dict = ()):
     # for i in image_ids:
     #     session.delete(url=f'https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images/{i}')
 
-    for i in images:
-        os.remove(f'media/temp/{i}')
-
     return answer
