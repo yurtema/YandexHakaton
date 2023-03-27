@@ -59,7 +59,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
     with open('src/files.json', 'w') as file:
         test = file.write('{}')
 
-    with open('files.json', encoding='utf8', mode='r') as file:
+    with open('src/files.json', encoding='utf8', mode='r') as file:
         uploaded_files = load(file)
 
     image_ids = []
@@ -72,7 +72,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
         with Pool(len(images)) as p:
             image_ids += p.starmap(send, sequence)
 
-    with open('files.json', encoding='utf8', mode='w') as file:
+    with open('src/files.json', encoding='utf8', mode='w') as file:
         dump(uploaded_files, file)
 
     # Записать существующие переменные
