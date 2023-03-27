@@ -55,11 +55,11 @@ def send_text(event, text, state_change: dict = ()):
 
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
-    with open('src/files.json', 'w') as file:
+    with open('src/files.json', 'w', encoding='utf8') as file:
         pass
-    with open('src/files.json', 'r') as file:
+    with open('src/files.json', 'r', encoding='utf8') as file:
         file_ = file.read()
-    with open('src/files.json', 'w') as file:
+    with open('src/files.json', 'w', encoding='utf8') as file:
         if file_ == '':
             file.write('{}')
 
