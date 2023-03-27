@@ -1,5 +1,5 @@
-import requests
-import os
+from requests import Session
+from multiprocessing import Pool
 
 
 def end_session(event, text):
@@ -40,19 +40,25 @@ def send_text(event, text, state_change: dict = ()):
     }
 
 
+def post_image(image):
+    session = Session()
+    session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
+    return session.post('https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images',
+                        {'Content-Type': 'multipart/form-data'},
+                        files={'file': (image, open(f'media/{image}', 'rb'))}).json()['image']['id']
+
+
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
 
-    # Подсоедениться к сессии http запроса и отправить все нужные изображения в хранилище Яндекса
-    session = requests.Session()
-    session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
     image_ids = []
-    for image in images:
+    if len(images) == 1:
         # записывая id всех изображений в список
-        image_ids.append(
-            session.post('https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images',
-                         {'Content-Type': 'multipart/form-data'},
-                         files={'file': (image, open(f'media/{image}', 'rb'))}).json()['image']['id'])
+        image_ids.append(post_image(images[0]))
+
+    else:
+        with Pool(len(images)) as p:
+            image_ids += p.map(post_image, images)
 
     # Записать существующие переменные
     state = event['state']['session']
