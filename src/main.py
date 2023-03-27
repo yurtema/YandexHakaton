@@ -83,13 +83,13 @@ def handler(event):
     if state == 'цвет?':
         if overlaps(user_text, phrases.user_random):
             rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
-            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?', 'base_color': rgb_base})
+            return yandex.send_text(event, choice(phrases.what_theme), {'state': 'тема дек?', 'base_color': rgb_base})
 
         if overlaps(user_text, phrases.colors):
             dirs = listdir('media')
             dirs.remove('temp')
             return yandex.send_text(event,
-                                    choice(phrases.what_design) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
+                                    choice(phrases.what_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
                                     {'state': 'тема дек?', 'base_color': phrases.colors[user_text]})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
@@ -105,12 +105,12 @@ def handler(event):
         random_theme = choice(dirs)
 
         if overlaps(user_text, phrases.user_random):
-            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?',
-                                                                         'dec_theme': random_theme})
+            return yandex.send_text(event, choice(phrases.what_theme), {'state': 'тема дек?',
+                                                                        'dec_theme': random_theme})
 
         if overlaps(user_text, dirs):
-            return yandex.send_text(event, choice(phrases.what_design), {'state': 'тема дек?',
-                                                                         'dec_theme': user_text})
+            return yandex.send_text(event, choice(phrases.what_theme), {'state': 'тема дек?',
+                                                                        'dec_theme': user_text})
 
         return yandex.send_text(event, choice(phrases.error_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs))
 
