@@ -8,9 +8,9 @@ def start_generating_random():
     rgb_base = (randint(0, 255), randint(0, 255), randint(0, 255))
     rgb_dec = (randint(0, 255), randint(0, 255), randint(0, 255))
 
-    dirs = listdir('media')
-    dirs.remove('temp')
-    dirs.remove('Хэллоуин')
+    # dirs = listdir('media')
+    # dirs.remove('temp')
+    dirs = ['геометрия']
     direct = choice(dirs)
     sample = f'{direct}/{str(randint(1, len(listdir(f"media/{direct}")) // 3))}'
 
