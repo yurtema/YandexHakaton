@@ -157,24 +157,21 @@ def handler(event):
             file = f'{theme}/{design}'
             thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
-            return yandex.send_text(event, f'зашибись\n: тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
+            return yandex.send_text(event, f'зашибись:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
                                            f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         if overlaps(user_text, phrases.colors):
             dec_color = phrases.colors[user_text]
-            return yandex.send_text(event, f'зашибись\n: тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
+            return yandex.send_text(event, f'зашибись:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
                                            f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
 
     if state == 'все так?':
-        theme = event['state']['session']['dec_theme']
-        design = event['state']['session']['design']
-        base_color = event['state']['session']['base_color']
-        dec_color = event['state']['session']['dec_color']
+
         if overlaps(user_text, phrases.yes):
-            return yandex.send_image(event, 'Все готово:', [])
+            return yandex.send_image(event, 'Все готово:', [event['state']['session']['file'], ])
 
     else:
         return 'Ничерта не сработало, пишите админу. Для админа: \n' + str(event)
