@@ -10,6 +10,7 @@ def start_generating_random():
 
     dirs = listdir('media')
     dirs.remove('temp')
+    dirs.remove('разное')
     direct = choice(dirs)
     sample = f'{direct}/{str(randint(1, len(listdir(f"media/{direct}")) // 3))}'
 
