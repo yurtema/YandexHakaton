@@ -162,6 +162,9 @@ def handler(event):
 
         if overlaps(user_text, phrases.colors):
             dec_color = phrases.colors[user_text]
+            file = f'{theme}/{design}'
+            thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
+            thread.start()
             return yandex.send_text(event, f'зашибись:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
                                            f'\nдоп цвет: {dec_color} \nВсе так?', {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
