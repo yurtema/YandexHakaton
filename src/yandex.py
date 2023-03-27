@@ -65,6 +65,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
         print(file_)
     with open('src/files.json', 'w', encoding='utf8') as file:
         if file_ == '':
+            print('он пустой')
             file.write('{}')
 
     with open('src/files.json', encoding='utf8', mode='r') as file:
