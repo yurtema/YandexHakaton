@@ -48,6 +48,11 @@ def handler(event):
         if overlaps(user_text, phrases.no):
             return yandex.end_session(event, choice(phrases.end_session))
 
+        if user_text == 'сбрось':
+            with open('src/files.json', 'w', encoding='utf8') as file:
+                file.write('{}')
+            return yandex.send_text(event, 'да')
+
         return yandex.send_text(event, choice(phrases.what))
 
     # Случайный или нет?
