@@ -25,8 +25,8 @@ def start_generating_random():
 
 
 def overlaps(user, target):
-    return [1 for i in user.lower().replace(',', ' ').replace('.', ' ').split() if
-            i in target] is not {}
+    answ = [1 for i in user.lower().replace(',', ' ').replace('.', ' ').split() if i in target] != []
+    return answ
 
 
 def handler(event):
@@ -46,7 +46,7 @@ def handler(event):
             return yandex.send_text(event, choice(phrases.start_skill),
                                     {'state': 'случайный?'})
 
-        elif overlaps(user_text, phrases.no):
+        if overlaps(user_text, phrases.no):
             return yandex.end_session(event, choice(phrases.end_session))
 
         return yandex.send_text(event, choice(phrases.what))
