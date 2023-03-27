@@ -71,7 +71,7 @@ def handler(event):
             return yandex.send_image(event, choice(phrases.random), [choice(listdir('media/temp'))],
                                      {'state': 'еще случайный?'})
 
-        elif overlaps(user_text, phrases.no):
+        if overlaps(user_text, phrases.no):
             return yandex.end_session(event, choice(phrases.end_session))
 
         return yandex.send_text(event, choice(phrases.what))
@@ -87,7 +87,6 @@ def handler(event):
         if overlaps(user_text, phrases.colors):
             dirs = listdir('media')
             dirs.remove('temp')
-            random_theme = choice(dirs)
             return yandex.send_text(event,
                                     choice(phrases.what_design) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
                                     {'state': 'тема дек?', 'base_color': phrases.colors[user_text]})
