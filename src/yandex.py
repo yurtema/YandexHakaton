@@ -70,6 +70,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
 
     print('я ничего не понимаю')
     print(uploaded_files)
+    print('абсолютно')
 
     image_ids = []
     if len(images) == 1:
