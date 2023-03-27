@@ -24,7 +24,7 @@ def change_color(photo: Image, requested_color: tuple):
     for x in range(image_color.width):
         for y in range(image_color.height):
             if image_color.getpixel((x, y))[-1] != 0:
-                image_color.putpixel((x, y), requested_color + (image_color.getpixel((x, y))[-1],))
+                image_color.putpixel((x, y), tuple(requested_color) + (image_color.getpixel((x, y))[-1],))
 
     for x in range(image_grey.width):
         for y in range(image_grey.height):
