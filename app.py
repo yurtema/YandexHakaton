@@ -4,11 +4,10 @@ import json
 
 app = Flask(__name__)
 
-if __name__ == '__main__':
 
-    @app.route('/', methods=['POST'])
-    def entrypoint():
+@app.route('/', methods=['POST'])
+def entrypoint():
 
-        event = json.loads(request.data.decode('utf8'))
+    event = json.loads(request.data.decode('utf8'))
 
-        return handler(event)
+    return handler(event)
