@@ -132,7 +132,7 @@ def handler(event):
                                     {'state': 'цвет дизайна?', 'design': choice(list(available))})
 
         if overlaps(user_text, phrases.available):
-            images = [f'{theme}/{i}_hand' for i in available]
+            images = [f'{theme}/{i}_hand.png' for i in available]
             if len(images) > 10:
                 return yandex.send_image(event, 'страница 1/' + str(len(images) // 10), images, {'state': 'каталог',
                                                                                                  'page': 1})
