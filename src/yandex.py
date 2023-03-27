@@ -7,6 +7,7 @@ session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZ
 
 
 def send(image, files):
+    print(image, files)
     if image in files:
         print('dkawPDKPAWDKPAWD')
         return files.get(image)
