@@ -12,8 +12,7 @@ def send(image, files):
     image_id = session.post('https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images',
                             {'Content-Type': 'multipart/form-data'},
                             files={'file': (image, open(f'media/{image}', 'rb'))}).json()['image']['id']
-    files[image] = image_id
-    return {image: image_id}
+    return image_id
 
 
 def end_session(event, text):
