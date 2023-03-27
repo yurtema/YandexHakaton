@@ -182,8 +182,9 @@ def handler(event):
             return yandex.send_image(event, 'Все готово:', ['temp/' + event['state']['session']['file'], ])
 
         if overlaps(user_text, phrases.no):
-            return yandex.send_text(event, 'Тогда давайте еще раз попробуем. Какой хотите главный цвет?',
-                                    {'state': 'цвет'})
+            return yandex.send_text(event,
+                                    'Тогда давайте еще раз попробуем. Какой хотите главный цвет?' + '\nВарианты:\n' +
+                                    'случайный\n' + '\n'.join(phrases.colors.keys()), {'state': 'цвет?'})
 
         return yandex.send_text(event, choice(phrases.what))
 
