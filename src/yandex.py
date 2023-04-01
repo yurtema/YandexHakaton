@@ -65,7 +65,7 @@ def send_image(event, text, images: list, state_change: dict = ()):
         uploaded_files = load(file)
         print('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFUCK')
         print(uploaded_files, type(uploaded_files))
-
+    print('что просиходит')
     image_ids = []
 
     if len(images) == 1:
