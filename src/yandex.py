@@ -75,8 +75,8 @@ def send_image(event, text, images: list, state_change: dict = ()):
         with Pool(len(images)) as p:
             image_ids = p.starmap(send, sequence)
 
-        for i in range(len(images)):
-            uploaded_files[images[i]] = image_ids[i]
+    for i in range(len(images)):
+        uploaded_files[images[i]] = image_ids[i]
 
     with open('src/files.json', encoding='utf8', mode='w') as file:
         dump(uploaded_files, file)
