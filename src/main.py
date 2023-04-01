@@ -1,7 +1,7 @@
 from src import yandex, phrases, image
 from random import choice, randint
 from os import listdir, remove
-import threading
+from threading import Thread
 
 
 def start_generating_random():
@@ -14,7 +14,7 @@ def start_generating_random():
     direct = choice(dirs)
     sample = f'{direct}/{str(randint(1, len(listdir(f"media/{direct}")) // 3))}'
 
-    thread = threading.Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
+    thread = Thread(target=image.recolor_hand, args=(sample, rgb_base, rgb_dec))
     thread.start()
 
     if len(listdir('media/temp')) >= 100:
@@ -156,7 +156,7 @@ def handler(event):
             rgb_dec = [randint(0, 255), randint(0, 255), randint(0, 255)]
             dec_color = rgb_dec
             file = f'{theme}/{design}'
-            thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
+            thread = Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
             return yandex.send_text(event,
                                     f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
@@ -166,7 +166,7 @@ def handler(event):
         if overlaps(user_text, phrases.colors):
             dec_color = phrases.colors[user_text]
             file = f'{theme}/{design}'
-            thread = threading.Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
+            thread = Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
             return yandex.send_text(event,
                                     f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '

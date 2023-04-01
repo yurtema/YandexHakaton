@@ -2,6 +2,7 @@ from requests import Session
 from multiprocessing import Pool
 from json import load, dump
 from os import listdir, remove
+from threading import Thread
 
 session = Session()
 session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
@@ -16,23 +17,30 @@ def send(image, files):
     return image_id
 
 
+def clear():
+    with open('src/files.json', encoding='utf8', mode='r') as file:
+        uploaded_files = load(file)
+
+    for i in listdir('media/temp'):
+        remove(f'media/temp/{i}')
+        if 'temp/' + i in uploaded_files:
+            session.delete(
+                url=f'https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images/'
+                    f'{uploaded_files.pop("temp/" + i)}')
+
+    with open('src/files.json', encoding='utf8', mode='w') as file:
+        dump(uploaded_files, file)
+
+
 def end_session(event, text):
     """ Закончить сессию, отправив заданный текст """
 
     result = session.get('https://dialogs.yandex.net/api/v1/status').json()
     free = (result['images']['quota']['total'] - result['images']['quota']['used']) / 1024 ** 2
+
     if free <= 100:
-
-        with open('src/files.json', encoding='utf8', mode='r') as file:
-            uploaded_files = load(file)
-
-        for i in listdir('media/temp'):
-            remove(f'media/temp/{i}')
-            if 'temp/'+i in uploaded_files:
-                uploaded_files.pop('temp/'+i)
-
-        with open('src/files.json', encoding='utf8', mode='w') as file:
-            dump(uploaded_files, file)
+        thread = Thread(target=clear)
+        thread.start()
 
     return {
         'version': event['version'],
