@@ -56,7 +56,7 @@ def handler(event):
         if overlaps(user_text, phrases.help_phrases):
             return yandex.send_text(event, 'Начинаем работу навыка? \n да - начать \n нет - не начинать')
 
-        if overlaps(user_text, ['что ты умеешь']):
+        if user_text in ['что ты умеешь', 'что ты умеешь?']:
             return yandex.send_text(event, 'Я умею создавать дизайны маникюра по твоему выбору или '
                                            'генерировать случайные. Начнем?')
 
