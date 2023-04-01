@@ -1,7 +1,7 @@
 from requests import Session
 from multiprocessing import Pool
 from json import load, dump
-from os import listdir
+from os import listdir, remove
 
 session = Session()
 session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
@@ -18,6 +18,21 @@ def send(image, files):
 
 def end_session(event, text):
     """ Закончить сессию, отправив заданный текст """
+
+    result = session.get('https://dialogs.yandex.net/api/v1/status').json()
+    free = (result['images']['quota']['total'] - result['images']['quota']['used']) / 1024 ** 2
+    if free <= 100:
+
+        with open('src/files.json', encoding='utf8', mode='r') as file:
+            uploaded_files = load(file)
+
+        for i in listdir('media/temp'):
+            remove(f'media/temp/{i}')
+            uploaded_files.pop('temp/'+i)
+
+        with open('src/files.json', encoding='utf8', mode='w') as file:
+            dump(uploaded_files, file)
+
     return {
         'version': event['version'],
         'session': event['session'],
