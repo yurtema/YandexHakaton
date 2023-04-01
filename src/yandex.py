@@ -57,6 +57,8 @@ def send_text(event, text, state_change: dict = ()):
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
 
+    print('че')
+
     if 'files.json' not in listdir('src'):
         with open('src/files.json', encoding='utf8', mode='w') as file:
             dump('{}', file)
