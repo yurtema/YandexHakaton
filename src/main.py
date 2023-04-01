@@ -53,6 +53,13 @@ def handler(event):
                 file.write('{}')
             return yandex.send_text(event, 'да')
 
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Начинаем работу навыка? \n да - начать \n нет - не начинать')
+
+        if overlaps(user_text, ['что ты умеешь']):
+            return yandex.send_text(event, 'Я умею создавать дизайны маникюра по твоему выбору или '
+                                           'генерировать случайные. Начнем?')
+
         return yandex.send_text(event, choice(phrases.what))
 
     # Случайный или нет?
@@ -67,6 +74,11 @@ def handler(event):
             return yandex.send_text(event, choice(phrases.what_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
                 phrases.colors.keys()), {'state': 'цвет?'})
 
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Прислать случайно сгенерированный дизайн? \n'
+                                           'рандом/случайный - прислать случайный \n'
+                                           'конкретный/определенный - начать собирать свой дизайн')
+
         return yandex.send_text(event, choice(phrases.what))
 
     # Отправлять ли еще одно случайное изображение или закончить?
@@ -79,6 +91,11 @@ def handler(event):
 
         if overlaps(user_text, phrases.no):
             return yandex.end_session(event, choice(phrases.end_session))
+
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Еще один случайный? \n'
+                                           'да - прислать новый случайный \n '
+                                           'нет - закончить навык')
 
         return yandex.send_text(event, choice(phrases.what))
 
@@ -99,6 +116,11 @@ def handler(event):
                                     choice(phrases.what_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
                                     {'state': 'тема дек?', 'base_color': phrases.colors[user_text]})
 
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Выберите основной цвет (цвет ногтя) \n'
+                                           'название цвета - выбрать цвет \n '
+                                           'рандом/случайный - взять случайный цвет')
+
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
 
@@ -118,6 +140,11 @@ def handler(event):
         if overlaps(user_text, dirs):
             return yandex.send_text(event, choice(phrases.what_design), {'state': 'дизайн?',
                                                                          'dec_theme': user_text})
+
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Выберите тему для дизайна \n'
+                                           'тема - выбрать тему \n '
+                                           'рандом/случайный - взять случайную тему')
 
         return yandex.send_text(event, choice(phrases.error_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs))
 
@@ -147,6 +174,13 @@ def handler(event):
                                                                                                  'page': 1})
             return yandex.send_image(event, choice(phrases.catalog), images)
 
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Выберите дизайн \n'
+                                           'порядковый номер дизайна - выбрать дизайн \n '
+                                           'рандом/случайный - взять случайную тему')
+
+        return yandex.send_text(event, choice(phrases.what))
+
     if state == 'цвет дизайна?':
         theme = event['state']['session']['dec_theme']
         design = event['state']['session']['design']
@@ -173,6 +207,11 @@ def handler(event):
                                     f'\nдоп цвет: {dec_color} \nВсе так?',
                                     {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Выберите цвет дизайна \n'
+                                           'название цвета - выбрать цвет \n '
+                                           'рандом/случайный - взять случайный цвет')
+
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
 
@@ -190,6 +229,11 @@ def handler(event):
                                     'Тогда давайте еще раз попробуем. Какой хотите главный цвет?' + '\nВарианты:\n' +
                                     'случайный\n' + '\n'.join(phrases.colors.keys()), {'state': 'цвет?'})
 
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Все ли правильно? \n'
+                                           'да - утвердить параметры изображения и прислать его \n '
+                                           'нет - начать выбирать заново')
+
         return yandex.send_text(event, choice(phrases.what))
 
     if state == 'ждите генерации':
@@ -198,10 +242,18 @@ def handler(event):
                 return yandex.send_image(event, 'Все готово:', ['temp/' + event['state']['session']['file'], ])
             else:
                 return yandex.send_text(event, 'Простите, изображение ещё не сгенерированно. Попробовать еще раз?')
+
         if overlaps(user_text, phrases.no):
             return yandex.send_text(event,
                                     'Тогда давайте еще раз попробуем. Какой хотите главный цвет?' + '\nВарианты:\n' +
                                     'случайный\n' + '\n'.join(phrases.colors.keys()), {'state': 'цвет?'})
+
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Изображению нужно время для генерации, простите пожалуйста. Может '
+                                           'понадобиться несколько секунд\n'
+                                           'да - попробовать прислать то же изображение \n '
+                                           'нет - начать выбирать заново')
+
         return yandex.send_text(event, choice(phrases.what))
 
     else:
