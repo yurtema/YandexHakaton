@@ -25,7 +25,7 @@ def start_generating_random():
 
 
 def overlaps(user, target):
-    return [1 for i in user.replace(',', ' ').replace('.', ' ').split() if i in target] != []
+    return [1 for i in user.replace(',', ' ').replace('.', ' ').replace('?', ' ').split() if i in target] != []
 
 
 def handler(event):
