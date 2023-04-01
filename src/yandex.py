@@ -38,7 +38,7 @@ def end_session(event, text):
     result = session.get('https://dialogs.yandex.net/api/v1/status').json()
     free = (result['images']['quota']['total'] - result['images']['quota']['used']) / 1024 ** 2
 
-    if free <= 100:
+    if free <= 2:
         thread = Thread(target=clear)
         thread.start()
 

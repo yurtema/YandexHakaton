@@ -70,10 +70,10 @@ def handler(event):
         return yandex.send_text(event, choice(phrases.what))
 
     # Отправлять ли еще одно случайное изображение или закончить?
-    # случайное - отправить случайное изображение из папки temp и спросить снова
+    # да - отправить случайное изображение из папки temp и спросить снова
     # нет - закончить навык
     if state == 'еще случайный?':
-        if overlaps(user_text, phrases.user_random):
+        if overlaps(user_text, phrases.yes):
             return yandex.send_image(event, choice(phrases.random), ['temp/' + choice(listdir('media/temp'))],
                                      {'state': 'еще случайный?'})
 
@@ -145,7 +145,7 @@ def handler(event):
             if len(images) > 10:
                 return yandex.send_image(event, 'страница 1/' + str(len(images) // 10), images, {'state': 'каталог',
                                                                                                  'page': 1})
-            return yandex.send_image(event, 'вот все доступные дизайны', images)
+            return yandex.send_image(event, choice(phrases.catalog), images)
 
     if state == 'цвет дизайна?':
         theme = event['state']['session']['dec_theme']
@@ -160,7 +160,7 @@ def handler(event):
             thread.start()
             return yandex.send_text(event,
                                     f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
-                                    f'\nдоп цвет: {dec_color} \nВсе так? \n Для проверяющих: подождите тут пожалуйста пару секунд перед тем как отвечать "да", я не успел доделать проверку одну :(',
+                                    f'\nдоп цвет: {dec_color} \nВсе так?',
                                     {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         if overlaps(user_text, phrases.colors):
@@ -170,7 +170,7 @@ def handler(event):
             thread.start()
             return yandex.send_text(event,
                                     f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
-                                    f'\nдоп цвет: {dec_color} \nВсе так? \n Для проверяющих: подождите тут пожалуйста пару секунд перед тем как отвечать "да", я не успел доделать проверку одну :(',
+                                    f'\nдоп цвет: {dec_color} \nВсе так?',
                                     {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
