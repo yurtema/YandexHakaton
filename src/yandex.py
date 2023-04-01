@@ -1,6 +1,7 @@
 from requests import Session
 from multiprocessing import Pool
 from json import load, dump
+from os import listdir
 
 session = Session()
 session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZDWCeWvtTCmOD6vqlbc6ZwlirQo'})
@@ -55,6 +56,10 @@ def send_text(event, text, state_change: dict = ()):
 
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
+
+    if 'files.json' not in listdir('src'):
+        with open('src/files.json', encoding='utf8', mode='w') as file:
+            dump('{}', file)
 
     with open('src/files.json', encoding='utf8', mode='r') as file:
         uploaded_files = load(file)
