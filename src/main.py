@@ -35,7 +35,14 @@ def handler(event):
 
     user_text = event['request']['original_utterance'].lower()
     state = event['state']['session']['state']
-    start_generating_random()
+    if len(listdir()) <= 5:
+        start_generating_random()
+    elif len(listdir()) <= 20 and randint(1, 2) == 1:
+        start_generating_random()
+    elif len(listdir()) <= 50 and randint(1, 4) == 1:
+        start_generating_random()
+    elif len(listdir()) <= 70 and randint(1, 5) == 1:
+        start_generating_random()
 
     # Начинать или нет?
     # да - запустить генерацию изображения со случайными параметрами
@@ -187,8 +194,7 @@ def handler(event):
         base_color = event['state']['session']['base_color']
 
         if overlaps(user_text, phrases.user_random):
-            rgb_dec = [randint(0, 255), randint(0, 255), randint(0, 255)]
-            dec_color = rgb_dec
+            dec_color = [randint(0, 255), randint(0, 255), randint(0, 255)]
             file = f'{theme}/{design}'
             thread = Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
@@ -250,7 +256,7 @@ def handler(event):
 
         if overlaps(user_text, phrases.help_phrases):
             return yandex.send_text(event, 'Изображению нужно время для генерации, простите пожалуйста. Может '
-                                           'понадобиться несколько секунд\n'
+                                           'понадобиться несколько секунд, максимум - 10 секунд \n'
                                            'да - попробовать прислать то же изображение \n '
                                            'нет - начать выбирать заново')
 
