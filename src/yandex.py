@@ -59,10 +59,11 @@ def send_image(event, text, images: list, state_change: dict = ()):
 
     if 'files.json' not in listdir('src'):
         with open('src/files.json', encoding='utf8', mode='w') as file:
-            dump('{}', file)
+            dump({}, file)
 
     with open('src/files.json', encoding='utf8', mode='r') as file:
-        uploaded_files = dict(load(file))
+        uploaded_files = load(file)
+        return [uploaded_files, str(type(uploaded_files))]
 
     print('что просиходит')
     image_ids = []
