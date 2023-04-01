@@ -7,9 +7,7 @@ session.headers.update({'Authorization': 'OAuth y0_AgAAAABFyZJlAAT7owAAAADfKD6vZ
 
 
 def send(image, files):
-    print(image, files)
     if image in files:
-        print('dkawPDKPAWDKPAWD')
         return files.get(image)
     image_id = session.post('https://dialogs.yandex.net/api/v1/skills/6c8cbf72-0a69-4c8b-a81e-332d023fffc8/images',
                             {'Content-Type': 'multipart/form-data'},
@@ -57,18 +55,18 @@ def send_text(event, text, state_change: dict = ()):
 
 def send_image(event, text, images: list, state_change: dict = ()):
     """ Отправить изображение """
+
     with open('src/files.json', encoding='utf8', mode='r') as file:
         uploaded_files = load(file)
 
     image_ids = []
+
     if len(images) == 1:
         # записывая id всех изображений в список
         image_ids.append(send(images[0], uploaded_files))
 
     else:
         sequence = [(i, uploaded_files) for i in images]
-        print(sequence)
-        print(uploaded_files)
         with Pool(len(images)) as p:
             image_ids = p.starmap(send, sequence)
 
@@ -78,7 +76,6 @@ def send_image(event, text, images: list, state_change: dict = ()):
     with open('src/files.json', encoding='utf8', mode='w') as file:
         dump(uploaded_files, file)
 
-    # Записать существующие переменные
     state = event['state']['session']
     for i in state_change:
         state[i] = state_change[i]

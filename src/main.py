@@ -35,7 +35,7 @@ def handler(event):
 
     user_text = event['request']['original_utterance'].lower()
     state = event['state']['session']['state']
-    # start_generating_random()
+    start_generating_random()
 
     # Начинать или нет?
     # да - запустить генерацию изображения со случайными параметрами
@@ -179,13 +179,29 @@ def handler(event):
     if state == 'все так?':
 
         if overlaps(user_text, phrases.yes):
-            return yandex.send_image(event, 'Все готово:', ['temp/' + event['state']['session']['file'], ])
+            if event['state']['session']['file'] in listdir('media/temp'):
+                return yandex.send_image(event, 'Все готово:', ['temp/' + event['state']['session']['file'], ])
+            else:
+                return yandex.send_text(event, 'Простите, изображение ещё не сгенерированно. Попробовать еще раз?',
+                                        {'state': 'ждите генерации'})
 
         if overlaps(user_text, phrases.no):
             return yandex.send_text(event,
                                     'Тогда давайте еще раз попробуем. Какой хотите главный цвет?' + '\nВарианты:\n' +
                                     'случайный\n' + '\n'.join(phrases.colors.keys()), {'state': 'цвет?'})
 
+        return yandex.send_text(event, choice(phrases.what))
+
+    if state == 'ждите генерации':
+        if overlaps(user_text, phrases.yes):
+            if event['state']['session']['file'] in listdir('media/temp'):
+                return yandex.send_image(event, 'Все готово:', ['temp/' + event['state']['session']['file'], ])
+            else:
+                return yandex.send_text(event, 'Простите, изображение ещё не сгенерированно. Попробовать еще раз?')
+        if overlaps(user_text, phrases.no):
+            return yandex.send_text(event,
+                                    'Тогда давайте еще раз попробуем. Какой хотите главный цвет?' + '\nВарианты:\n' +
+                                    'случайный\n' + '\n'.join(phrases.colors.keys()), {'state': 'цвет?'})
         return yandex.send_text(event, choice(phrases.what))
 
     else:
