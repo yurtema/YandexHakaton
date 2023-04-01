@@ -28,7 +28,8 @@ def end_session(event, text):
 
         for i in listdir('media/temp'):
             remove(f'media/temp/{i}')
-            uploaded_files.pop('temp/'+i)
+            if 'temp'+i in uploaded_files:
+                uploaded_files.pop('temp/'+i)
 
         with open('src/files.json', encoding='utf8', mode='w') as file:
             dump(uploaded_files, file)
