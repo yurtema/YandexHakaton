@@ -28,6 +28,19 @@ def overlaps(user, target):
     return [1 for i in user.replace(',', ' ').replace('.', ' ').replace('?', ' ').split() if i in target] != []
 
 
+def is_rgb(value):
+    value = value.split(' ')
+    if len(value) != 3:
+        return False
+    try:
+        value = list(map(int, value))
+    except ValueError:
+        return False
+    if not ((0 <= value[0] <= 255) and (0 <= value[1] <= 255) and (0 <= value[2] <= 255)):
+        return False
+    return [value[0], value[1], value[2]]
+
+
 def handler(event):
     # Начало
     if event['state']['session'] == {}:
@@ -125,8 +138,14 @@ def handler(event):
 
         if overlaps(user_text, phrases.help_phrases):
             return yandex.send_text(event, 'Выберите основной цвет (цвет ногтя) \n'
+                                           'код цвета в формате rgb (например 65 212 34) - выбрать цвет \n'
                                            'название цвета - выбрать цвет \n '
                                            'рандом/случайный - взять случайный цвет')
+
+        if is_rgb(user_text):
+            return yandex.send_text(event,
+                                    choice(phrases.what_theme) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(dirs),
+                                    {'state': 'тема дек?', 'base_color': is_rgb(user_text)})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
@@ -216,7 +235,18 @@ def handler(event):
         if overlaps(user_text, phrases.help_phrases):
             return yandex.send_text(event, 'Выберите цвет дизайна \n'
                                            'название цвета - выбрать цвет \n '
-                                           'рандом/случайный - взять случайный цвет')
+                                           'код цвета в формате rgb (например 65 212 34) - выбрать цвет \n'
+                                           'рандом/случайный - взять случайный цвет \n')
+
+        if is_rgb(user_text):
+            dec_color = is_rgb(user_text)
+            file = f'{theme}/{design}'
+            thread = Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
+            thread.start()
+            return yandex.send_text(event,
+                                    f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
+                                    f'\nдоп цвет: {dec_color} \nВсе так?',
+                                    {'state': 'все так?', 'file': f'{design}_{base_color}_{dec_color}.png'})
 
         return yandex.send_text(event, choice(phrases.error_color) + '\nВарианты:\n' + 'случайный\n' + '\n'.join(
             phrases.colors.keys()))
