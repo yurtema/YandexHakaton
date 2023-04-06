@@ -73,12 +73,12 @@ def handler(event):
                 file.write('{}')
             return yandex.send_text(event, 'да')
 
-        if overlaps(user_text, phrases.help_phrases):
-            return yandex.send_text(event, 'Начинаем работу навыка? \n да - начать \n нет - не начинать')
-
         if user_text in ['что ты умеешь', 'что ты умеешь?']:
             return yandex.send_text(event, 'Я умею создавать дизайны маникюра по твоему выбору или '
                                            'генерировать случайные. Начнем?')
+
+        if overlaps(user_text, phrases.help_phrases):
+            return yandex.send_text(event, 'Начинаем работу навыка? \n да - начать \n нет - не начинать')
 
         return yandex.send_text(event, choice(phrases.what))
 
@@ -217,6 +217,14 @@ def handler(event):
             file = f'{theme}/{design}'
             thread = Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
+            try:
+                dec_color = [i for i in phrases.colors if phrases.colors[i] == dec_color][0]
+            except IndexError:
+                pass
+            try:
+                base_color = [i for i in phrases.colors if phrases.colors[i] == base_color][0]
+            except IndexError:
+                pass
             return yandex.send_text(event,
                                     f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
                                     f'\nдоп цвет: {dec_color} \nВсе так?',
@@ -227,6 +235,14 @@ def handler(event):
             file = f'{theme}/{design}'
             thread = Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
+            try:
+                dec_color = [i for i in phrases.colors if phrases.colors[i] == dec_color][0]
+            except IndexError:
+                pass
+            try:
+                base_color = [i for i in phrases.colors if phrases.colors[i] == base_color][0]
+            except IndexError:
+                pass
             return yandex.send_text(event,
                                     f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
                                     f'\nдоп цвет: {dec_color} \nВсе так?',
@@ -243,6 +259,14 @@ def handler(event):
             file = f'{theme}/{design}'
             thread = Thread(target=image.recolor_hand, args=(file, base_color, dec_color))
             thread.start()
+            try:
+                dec_color = [i for i in phrases.colors if phrases.colors[i] == dec_color][0]
+            except IndexError:
+                pass
+            try:
+                base_color = [i for i in phrases.colors if phrases.colors[i] == base_color][0]
+            except IndexError:
+                pass
             return yandex.send_text(event,
                                     f'Замечательно:\n тема: {theme} \nдизайн: {design} \nосновной цвет: {base_color} '
                                     f'\nдоп цвет: {dec_color} \nВсе так?',
